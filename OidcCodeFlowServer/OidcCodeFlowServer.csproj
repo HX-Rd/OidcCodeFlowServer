@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>HXRd.CodeFlowServer</AssemblyName>
+    <Description>Handles OAuth callbacks and refresh token logins</Description>
+    <Company>HXRd</Company>
+    <Product>HXRd.CodeFlowServer</Product>
+    <Copyright>Copyright © HXRd 2019</Copyright>
+    <RootNamespace>HXRd.CodeFlowServer</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>
