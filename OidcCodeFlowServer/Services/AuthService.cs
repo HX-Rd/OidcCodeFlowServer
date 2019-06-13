@@ -130,8 +130,19 @@ namespace HXRd.CodeFlowServer
                 _logger.LogDebug("Auth Service RefreshTokens ran successfully");
                 var authResponse = JsonConvert.DeserializeObject<AuthResponse>(responseString);
 
-                if (_accessTokenJWKS != null || _idTokenJWKS != null)
-                    await ValidateTokens(authResponse);
+                if (_accessTokenJWKS != null)
+                {
+                    var accessTokenKeySet = await GetWebKeySet(_accessTokenJWKS);
+                    try
+                    {
+                        ValidateAccessToken(authResponse.AccessToken, accessTokenKeySet);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error when validating Access Token");
+                        throw;
+                    }
+                }
                 return authResponse;
             }
         }
@@ -142,28 +153,15 @@ namespace HXRd.CodeFlowServer
             JsonWebKeySet idTokenKeySet = null;
             if ((_accessTokenJWKS != null && _idTokenJWKS != null) && (_accessTokenJWKS.AbsoluteUri == _idTokenJWKS.AbsoluteUri))
             {
-                var jwksResponse = await _httpClient.GetAsync(_accessTokenJWKS);
-                var jwksRaw = await jwksResponse.Content.ReadAsStringAsync();
-                _logger.LogTrace($"Jwks Response: {jwksRaw}");
-                accessTokenKeySet = JsonConvert.DeserializeObject<JsonWebKeySet>(jwksRaw);
+                accessTokenKeySet = await GetWebKeySet(_accessTokenJWKS);
                 idTokenKeySet = accessTokenKeySet;
             }
             else
             {
                 if (_accessTokenJWKS != null)
-                {
-                    var accessJwksResponse = await _httpClient.GetAsync(_accessTokenJWKS);
-                    var accessJwksRaw = await accessJwksResponse.Content.ReadAsStringAsync();
-                    _logger.LogTrace($"Access Jwks Response: {accessJwksRaw}");
-                    accessTokenKeySet = JsonConvert.DeserializeObject<JsonWebKeySet>(accessJwksRaw);
-                }
+                    accessTokenKeySet = await GetWebKeySet(_accessTokenJWKS);
                 if (_idTokenJWKS != null)
-                {
-                    var idJwksResponse = await _httpClient.GetAsync(_idTokenJWKS);
-                    var idJwksRaw = await idJwksResponse.Content.ReadAsStringAsync();
-                    _logger.LogTrace($"Id Jwks Response: {idJwksRaw}");
-                    idTokenKeySet = JsonConvert.DeserializeObject<JsonWebKeySet>(idJwksRaw);
-                }
+                    idTokenKeySet = await GetWebKeySet(_idTokenJWKS);
             }
             if (_accessTokenJWKS != null)
             {
@@ -255,6 +253,13 @@ namespace HXRd.CodeFlowServer
 
                 var user = handler.ValidateToken(idTokenJwt, parameters, out var _);
             }
+        }
+        private async Task<JsonWebKeySet> GetWebKeySet(Uri jwksUri)
+        {
+            var jwksResponse = await _httpClient.GetAsync(jwksUri);
+            var jwksRaw = await jwksResponse.Content.ReadAsStringAsync();
+            _logger.LogTrace($"Jwks Response: {jwksRaw}");
+            return JsonConvert.DeserializeObject<JsonWebKeySet>(jwksRaw);
         }
     }
 }
