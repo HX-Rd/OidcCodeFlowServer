@@ -27,11 +27,11 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
-      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID OidcCodeFlowServer/OidcCodeFlowServer.csproj
+      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=1.0.0 OidcCodeFlowServer/OidcCodeFlowServer.csproj
     - name: Upload Artifact
       uses: actions/upload-artifact@v2.2.0
       with:
         name: nupkg
         path: ./OidcCodeFlowServer/bin/Release/*.nupkg
     - name: Publish Package
-      run: dotnet nuget push ./OidcCodeFlowServer/bin/Release/*.nupkg
+      run: dotnet nuget push "OidcCodeFlowServer/bin/Release/1.0.0.nupkg"
