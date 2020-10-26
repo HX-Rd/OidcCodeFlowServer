@@ -17,6 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+        source-url: https://nuget.pkg.github.com/HX-Rd/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}  
     - name: Install dependencies
       run: dotnet restore
     - name: Build
@@ -31,6 +34,4 @@ jobs:
         name: nupkg
         path: ./OidcCodeFlowServer/bin/Release/*.nupkg
     - name: Publish Package
-      run: |
-        dotnet nuget add source https://nuget.pkg.github.com/HX-Rd/index.json -n github -u HX-Rd -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
-        dotnet nuget push ./OidcCodeFlowServer/bin/Release/*.nupkg --source "github" -k ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push ./OidcCodeFlowServer/bin/Release/*.nupkg
