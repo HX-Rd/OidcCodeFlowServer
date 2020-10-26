@@ -22,16 +22,13 @@ jobs:
         dotnet-version: 3.1.301 
     - name: Install dependencies
       run: dotnet restore
+    - name: Add GPR Source using nuget.exe
+      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/HX-Rd/index.json  -Username "HX-Rd" -Password ${{ secrets.GITHUB_TOKEN }} 
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
       run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=${{env.version}} OidcCodeFlowServer/OidcCodeFlowServer.csproj
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2.2.0
-      with:
-        name: nupkg
-        path: ./OidcCodeFlowServer/bin/Release/*.nupkg
     - name: Publish Package
-      run: dotnet nuget push OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg -s https://nuget.pkg.github.com/HX-Rd/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg -source "GPR" -SkipDuplicate
