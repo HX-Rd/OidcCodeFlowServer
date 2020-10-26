@@ -31,4 +31,4 @@ jobs:
     - name: Pack
       run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=${{env.version}} OidcCodeFlowServer/OidcCodeFlowServer.csproj
     - name: Publish Package
-      run: dotnet nuget push OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg --source "GPR"
+      run: dotnet nuget push OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg --source GPR
