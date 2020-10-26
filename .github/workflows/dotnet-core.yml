@@ -32,5 +32,5 @@ jobs:
         path: ./OidcCodeFlowServer/bin/Release/*.nupkg
     - name: Publish Package
       run: |
-        dotnet nuget add source https://nuget.pkg.github.com/HX-Rd/index.json -n github -u HX-Rd -p ${{GITHUB_TOKEN}}
+        dotnet nuget add source https://nuget.pkg.github.com/HX-Rd/index.json -n github -u HX-Rd -p $GITHUB_TOKEN
         dotnet nuget push ./OidcCodeFlowServer/bin/Release/*.nupkg --source "github"
