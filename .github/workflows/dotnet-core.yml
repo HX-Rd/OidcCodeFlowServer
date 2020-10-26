@@ -34,4 +34,4 @@ jobs:
         name: nupkg
         path: ./OidcCodeFlowServer/bin/Release/*.nupkg
     - name: Publish Package
-      run: dotnet nuget push .OidcCodeFlowServer/bin/Release/{{env.version}}.nupkg -s https://nuget.pkg.github.com/HX-Rd/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push .OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg -s https://nuget.pkg.github.com/HX-Rd/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
