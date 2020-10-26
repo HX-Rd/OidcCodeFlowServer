@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master ]
 
+env: 
+  version: 0.0.{{ github.run_number }}
+
 jobs:
   build:
 
@@ -27,11 +30,11 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
-      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=1.0.0 OidcCodeFlowServer/OidcCodeFlowServer.csproj
+      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion={{env.version}} OidcCodeFlowServer/OidcCodeFlowServer.csproj
     - name: Upload Artifact
       uses: actions/upload-artifact@v2.2.0
       with:
         name: nupkg
         path: ./OidcCodeFlowServer/bin/Release/*.nupkg
     - name: Publish Package
-      run: dotnet nuget push "OidcCodeFlowServer/bin/Release/1.0.0.nupkg"
+      run: dotnet nuget push .OidcCodeFlowServer/bin/Release/{{env.version}}.nupkg -s https://nuget.pkg.github.com/HX-Rd/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
