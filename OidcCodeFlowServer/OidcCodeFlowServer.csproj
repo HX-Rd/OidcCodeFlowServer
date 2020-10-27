@@ -8,6 +8,8 @@
     <Product>HXRd.CodeFlowServer</Product>
     <Copyright>Copyright © HXRd 2019</Copyright>
     <RootNamespace>HXRd.CodeFlowServer</RootNamespace>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/HX-Rd/OidcCodeFlowServer</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
