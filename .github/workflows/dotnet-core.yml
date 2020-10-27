@@ -28,6 +28,16 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
       run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=${{env.version}} OidcCodeFlowServer/OidcCodeFlowServer.csproj
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: v0.0.${{ github.ref }}
+        release_name: Release ${{ env.version }}
+        draft: false
+        prerelease: false
     - name: Publish Nuget to GitHub registry
       run: dotnet nuget push ./OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/HX-Rd/index.json  
       env:
