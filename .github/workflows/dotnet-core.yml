@@ -28,5 +28,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Pack
       run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=${{env.version}} OidcCodeFlowServer/OidcCodeFlowServer.csproj
-    - name: Publish Package
-      run: curl -vX PUT -u "HX-Rd:${{ secrets.GITHUB_TOKEN }}" -F package=OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg https://nuget.pkg.github.com/HX-Rd/
+    - name: Publish Nuget to GitHub registry
+      run: dotnet nuget push ./OidcCodeFlowServer/bin/Release/HXRd.CodeFlowServer.${{env.version}}.nupkg -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/HX-Rd/index.json  
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
